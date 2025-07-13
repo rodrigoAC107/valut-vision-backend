@@ -3,8 +3,8 @@ import { Request, Response } from 'express';
 import * as categoryService from './category.service';
 
 export const getCategories = async (req: Request, res: Response) => {
-    const transactions = await categoryService.getAllCategories();
-    res.json(transactions);
+    const categories = await categoryService.getAllCategories();
+    res.json(categories);
 };
 
 export const createCategory = async (req: Request, res: Response) => {

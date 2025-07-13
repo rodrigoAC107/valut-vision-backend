@@ -2,9 +2,8 @@ import { Schema, model, Document } from 'mongoose';
 
 export type CategoryType = 'income' | 'expense';
 
-export interface Subcategory {
+export interface SubCategoryInput {
     name: string;
-    parentCategoryId: string;
     isDeleted?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
@@ -13,7 +12,7 @@ export interface Subcategory {
 export interface CategoryInput {
     name: string;
     type: CategoryType;
-    subcategories?: Subcategory[];
+    subcategories?: SubCategoryInput[];
 }
 
 export interface CategoryDocument extends CategoryInput, Document {
@@ -23,10 +22,9 @@ export interface CategoryDocument extends CategoryInput, Document {
 }
 
 // Subschema para Subcategory
-const subcategorySchema = new Schema<Subcategory>(
+const subcategorySchema = new Schema<SubCategoryInput>(
     {
         name: { type: String, required: true },
-        parentCategoryId: { type: String, required: true },
         isDeleted: { type: Boolean, default: false },
     },
     {
@@ -48,3 +46,5 @@ const categorySchema = new Schema<CategoryDocument>(
 );
 
 export const Category = model<CategoryDocument>('Category', categorySchema);
+
+export const SubCategory = model<SubCategoryInput>('Subcategory', subcategorySchema);

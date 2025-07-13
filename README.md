@@ -1,20 +1,23 @@
-
 # Plan de Proyecto: Sistema de Control de Ingresos y Egresos - Frontend con Vue 3 y Backend Node.js (TypeScript)
 
 # LINKS DE AYUDA
 
 ## Mockups para inspirar
+
 1 - https://www.behance.net/gallery/175495655/SpendWise-Expense-Tracker-Web-App-Design?tracking_source=search_projects|expense+tracker+web&l=101
 2 - https://www.behance.net/gallery/204404995/Spendify-Expense-Tracking-App-UI-Design?tracking_source=search_projects|expense+tracker+web&l=142
 
 ## URL para los icons que se utilizan
- - https://icones.js.org/collection/material-symbols
+
+- https://icones.js.org/collection/material-symbols
 
 ## URL del plugin para Data Table
- - https://www.ag-grid.com/vue-data-grid/getting-started/
+
+- https://www.ag-grid.com/vue-data-grid/getting-started/
 
 ## URL del plugin para Charts
- - https://vue-chartjs.org/
+
+- https://vue-chartjs.org/
 
 ## Descripción General
 
@@ -25,6 +28,7 @@ Aplicación web para gestionar ingresos y egresos mensuales, con análisis y vis
 ## Funcionalidades Principales
 
 ### 1. Reseteo mensual automático
+
 - Al iniciar un nuevo mes, el sistema debe reiniciar el conteo y los registros mensuales.
 - **Sugerencia:** Guardar registros con timestamps y filtrar por mes en backend; no borrar datos, solo filtrar para mostrar el mes actual.
 - **Bonus:** Permitir histórico mensual para reportes anuales.
@@ -35,28 +39,27 @@ Aplicación web para gestionar ingresos y egresos mensuales, con análisis y vis
 
 ```ts
 class Transaction {
-  id: string;                      // Identificador único de la transacción
-  amount: number;                  // Monto de la transacción (positivo para ingreso o egreso)
-  date: Date;                     // Fecha y hora en que ocurrió la transacción
-  category: Category;             // Categoría principal a la que pertenece esta transacción
-  subcategory?: Subcategory;      // Subcategoría específica dentro de la categoría (opcional)
-  type: 'income' | 'expense';    // Tipo de transacción: ingreso ('income') o egreso ('expense')
-  description?: string;           // Nota o detalle adicional sobre la transacción (opcional)
+  id: string; // Identificador único de la transacción
+  amount: number; // Monto de la transacción (positivo para ingreso o egreso)
+  date: Date; // Fecha y hora en que ocurrió la transacción
+  category: Category; // Categoría principal a la que pertenece esta transacción
+  subcategory?: Subcategory; // Subcategoría específica dentro de la categoría (opcional)
+  type: 'income' | 'expense'; // Tipo de transacción: ingreso ('income') o egreso ('expense')
+  description?: string; // Nota o detalle adicional sobre la transacción (opcional)
   expenseType?: 'fixed' | 'variable'; // Clasificación de egresos: fijo o variable (solo aplica para egresos)
-  isDeleted: boolean;             // Marca si la transacción fue borrada “suavemente” (soft delete)
+  isDeleted: boolean; // Marca si la transacción fue borrada “suavemente” (soft delete)
 }
 
 class Category {
-  id: string;                    // Identificador único de la categoría
-  name: string;                  // Nombre descriptivo de la categoría
-  type: 'income' | 'expense';   // Tipo para diferenciar si la categoría es de ingresos o egresos
+  id: string; // Identificador único de la categoría
+  name: string; // Nombre descriptivo de la categoría
+  type: 'income' | 'expense'; // Tipo para diferenciar si la categoría es de ingresos o egresos
   subcategories: Subcategory[]; // Lista de subcategorías asociadas a esta categoría
 }
 
 class Subcategory {
-  id: string;                  // Identificador único de la subcategoría
-  name: string;                // Nombre descriptivo de la subcategoría
-  parentCategoryId: string;    // ID de la categoría padre a la que pertenece esta subcategoría
+  id: string; // Identificador único de la subcategoría
+  name: string; // Nombre descriptivo de la subcategoría
 }
 ```
 
@@ -65,6 +68,7 @@ class Subcategory {
   - **Expense** para egresos
 
 ### 3. Subcategorías y detalles para egresos
+
 - Permitir agregar subcategorías para `Expense`, por ejemplo: `Alimentos`, `Transporte`, `Servicios`, `Entretenimiento`.
 - Poder crear nuevas subcategorías desde el frontend con validación.
 - Mostrar listado de subcategorías existentes para selección.
