@@ -35,5 +35,9 @@ export const loginUser = async (email: string, password: string) => {
         { expiresIn: '1d' }
     );
 
-    return { token, user };
+    const userObj = user.toObject() as Partial<typeof user>;
+    delete userObj.password;
+    delete userObj.__v;
+
+    return { token, user: userObj };
 };
