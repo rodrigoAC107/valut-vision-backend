@@ -17,12 +17,16 @@ export const me = async (req: Request, res: Response) => {
 
 export const changePassword = async (req: Request, res: Response) => {
 
-    const { email, password, newPassword } = req.body;
+    const { email, password, newPassword, confirmPassword } = req.body;
 
     try {
-        const user = await userService.updatePassword(email, password, newPassword);
-        res.status(201).json(user);
+        const user = await userService.updatePassword(email, password, newPassword, confirmPassword);
+        res.status(201).json({ message: 'Password changed successfully', user });
     } catch (error) {
-        res.status(400).json({ message: 'Change password failed', error });
+        if (error instanceof Error) {
+            res.status(400).json({ message: error.message });
+        } else {
+            res.status(500).json({ message: 'Unexpected server error' });
+        }
     }
 };

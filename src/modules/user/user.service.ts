@@ -10,9 +10,17 @@ export const me = async (email: string) => {
     return userData;
 };
 
-export const updatePassword = async (email: string, password: string, newPassword: string) => {
-    const user = await User.findOne({ email });
+export const updatePassword = async (
+    email: string,
+    password: string,
+    newPassword: string,
+    confirmPassword: string
+) => {
+    if (newPassword !== confirmPassword) {
+        throw new Error('New password and confirmation do not match');
+    }
 
+    const user = await User.findOne({ email });
     if (!user) throw new Error('User not found');
 
     const isMatch = await bcrypt.compare(password, user.password);
