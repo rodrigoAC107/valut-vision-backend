@@ -1,12 +1,30 @@
-import { Category, CategoryInput } from "./category.model";
+import { Category, CategoryInput } from './category.model';
 
-export const getAllCategories = async () => {
-    return await Category.find({ isDeleted: false }).lean();
+export interface CategoryFilter {
+    type?: 'income' | 'expense';
+}
+
+export const getAllCategories = async (filter: CategoryFilter = {}) => {
+    const query: any = { isDeleted: false };
+
+    if (filter.type) {
+        query.type = filter.type;
+    }
+
+    const categories = await Category.find(query, { __v: 0 }).lean();
+
+    return categories;
 };
 
+
 export const createCategory = async (data: CategoryInput) => {
-    const tx = new Category(data);
-    return await tx.save();
+    const category = new Category(data);
+    const savedCategory = await category.save();
+
+    const obj = savedCategory.toObject() as Partial<typeof category>;
+    delete obj.__v;
+
+    return obj;
 };
 
 export const updateCategory = async (id: string, data: Partial<CategoryInput>) => {
