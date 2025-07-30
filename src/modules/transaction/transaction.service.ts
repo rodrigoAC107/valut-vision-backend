@@ -3,8 +3,8 @@ import { Transaction, TransactionDocument, TransactionInput } from "./transactio
 
 interface TransactionFilters {
     categoryId?: string;
-    startDate?: string | Date;
-    endDate?: string | Date;
+    startDate?: string;
+    endDate?: string;
     type?: 'income' | 'expense';
 }
 
@@ -22,16 +22,16 @@ export const getAllTransactions = async (filters: TransactionFilters = {}) => {
     }
 
     if (filters.startDate || filters.endDate) {
-        query.date = {};
+        query.createdAt = {};
         if (filters.startDate) {
-            query.date.$gte = new Date(filters.startDate);
+            query.createdAt.$gte = new Date(filters.startDate);
         }
         if (filters.endDate) {
-            query.date.$lte = new Date(filters.endDate);
+            query.createdAt.$lte = new Date(filters.endDate);
         }
     }
 
-    return await Transaction.find(query).lean();
+    return await Transaction.find(query, { __v: 0 }).lean();
 };
 
 // Obtener una transacción por ID
