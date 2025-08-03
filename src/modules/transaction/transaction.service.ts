@@ -9,7 +9,6 @@ interface TransactionFilters {
 }
 
 
-// Obtener todas las transacciones que no están borradas
 export const getAllTransactions = async (filters: TransactionFilters = {}) => {
     const query: FilterQuery<TransactionDocument> = { isDeleted: false };
 
@@ -31,15 +30,29 @@ export const getAllTransactions = async (filters: TransactionFilters = {}) => {
         }
     }
 
-    return await Transaction.find(query, { __v: 0 }).lean();
+    const transactions = await Transaction.find(query, { __v: 0 })
+        .populate('categoryId', 'name'); // sin lean
+
+    return transactions.map(tx => ({
+        ...tx.toObject(),
+        category: (tx.categoryId as any)?.name ?? null,
+        categoryId: undefined,
+    }));
 };
 
-// Obtener una transacción por ID
+
 export const getTransactionById = async (id: string) => {
-    return await Transaction.findById(id).lean();
-};
+    const tx = await Transaction.findById(id).populate('categoryId', 'name');
+    if (!tx) return null;
 
-// Crear una nueva transacción
+    const txObj = tx.toObject();
+    return {
+        ...txObj,
+        category: (txObj.categoryId as any)?.name ?? null,
+        categoryId: tx.categoryId?._id ?? tx.categoryId,
+    };
+}
+
 export const createTransaction = async (data: TransactionInput) => {
     const tx = new Transaction(data);
     return await tx.save();
@@ -49,7 +62,6 @@ export const updateTransaction = async (id: string, data: Partial<TransactionInp
     return await Transaction.findByIdAndUpdate(id, data, { new: true }).lean();
 };
 
-// Borrado lógico (soft delete)
 export const softDeleteTransaction = async (id: string) => {
     return await Transaction.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
 };
