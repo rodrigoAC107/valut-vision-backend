@@ -24,15 +24,21 @@ export const getAllTransactions = async (filters: TransactionFilters = {}) => {
     if (filters.startDate || filters.endDate) {
         query.createdAt = {};
         if (filters.startDate) {
-            query.createdAt.$gte = new Date(filters.startDate);
+            const s = new Date(filters.startDate);
+            s.setHours(0, 0, 0, 0);
+            query.createdAt.$gte = s;
         }
         if (filters.endDate) {
-            query.createdAt.$lte = new Date(filters.endDate);
+            const e = new Date(filters.endDate);
+            e.setHours(23, 59, 59, 999);
+            query.createdAt.$lte = e;
         }
     }
 
     const transactions = await Transaction.find(query, { __v: 0 })
-        .populate('categoryId', 'name'); // sin lean
+        .populate('categoryId', 'name') // sin lean
+        .sort({ createdAt: -1 })
+        .limit(1000);
 
     return transactions.map(tx => ({
         ...tx.toObject(),

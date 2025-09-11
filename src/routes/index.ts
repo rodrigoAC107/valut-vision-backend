@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 
 import TransactionRoutes from '../modules/transaction/transaction.routes';
 import AuthRoutes from '../modules/auth/auth.route';
@@ -7,6 +7,10 @@ import CategoryRoutes from '../modules/category/category.route';
 import DashboardRoutes from '../modules/dashboard/dashboard.route';
 
 const router = Router();
+
+router.get('/ping', (req: Request, res: Response) => {
+    res.json({ pong: true });
+});
 
 router.use('/transactions', TransactionRoutes);
 router.use('/auth', AuthRoutes);

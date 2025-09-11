@@ -8,7 +8,7 @@ export const getCategories = async (req: Request, res: Response) => {
     const { type } = req.query;
 
     if (type && type !== 'expense' && type !== 'income') {
-        return res.status(400).json({ message: 'Invalid type query parameter' });
+        res.status(400).json({ message: 'Invalid type query parameter' });
     }
 
     const filter: CategoryFilter = type ? { type: type as 'expense' | 'income' } : {};
