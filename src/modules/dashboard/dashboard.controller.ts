@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import * as transactionService from '../transaction/transaction.service';
+import * as dashboardService from './dashboard.service';
 
 export const getTotalAmount = async (req: Request, res: Response) => {
 
@@ -60,5 +61,45 @@ export const getTopCategories = async (req: Request, res: Response) => {
     } catch (error) {
         console.error('Error fetching top categories:', error);
         res.status(500).json({ message: 'Error fetching top categories', error });
+    }
+};
+
+export const getSummaryV2 = async (req: Request, res: Response) => {
+    try {
+        const filters = dashboardService.parseDashboardFilters(req.query as any);
+        const data = await dashboardService.getDashboardSummary(filters);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching dashboard summary v2', error });
+    }
+};
+
+export const getCategoryBreakdownV2 = async (req: Request, res: Response) => {
+    try {
+        const filters = dashboardService.parseDashboardFilters(req.query as any);
+        const data = await dashboardService.getCategoryBreakdown(filters);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching category breakdown', error });
+    }
+};
+
+export const getExpenseTrendV2 = async (req: Request, res: Response) => {
+    try {
+        const filters = dashboardService.parseDashboardFilters(req.query as any);
+        const data = await dashboardService.getExpenseTrend(filters);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching expense trend', error });
+    }
+};
+
+export const getRecentExpensesV2 = async (req: Request, res: Response) => {
+    try {
+        const filters = dashboardService.parseDashboardFilters(req.query as any);
+        const data = await dashboardService.getRecentExpenses(filters);
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching recent expenses', error });
     }
 };

@@ -9,6 +9,7 @@ export const getTransactions = async (req: Request, res: Response) => {
         startDate: req.query.startDate as string | undefined,
         endDate: req.query.endDate as string | undefined,
         type: req.query.type as 'income' | 'expense' | undefined,
+        currentMonth: req.query.currentMonth === 'true',
     };
 
     const transactions = await transactionService.getAllTransactions(filters);
