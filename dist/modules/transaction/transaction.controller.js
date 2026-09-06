@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTransaction = exports.updateTransaction = exports.createTransaction = exports.getTransaction = exports.getTransactions = void 0;
+exports.deleteTransaction = exports.updateTransaction = exports.importFromTrello = exports.createTransaction = exports.getTransaction = exports.getTransactions = void 0;
 const transactionService = __importStar(require("./transaction.service"));
 const getTransactions = async (req, res) => {
     const filters = {
@@ -62,6 +62,23 @@ const createTransaction = async (req, res) => {
     res.status(201).json(newTransaction);
 };
 exports.createTransaction = createTransaction;
+const importFromTrello = async (req, res) => {
+    const cardName = String(req.body.cardName || '').trim();
+    if (!cardName) {
+        res.status(400).json({ message: 'cardName is required' });
+        return;
+    }
+    try {
+        const result = await transactionService.importFromTrelloCard(cardName);
+        res.json(result);
+    }
+    catch (error) {
+        res.status(400).json({
+            message: error instanceof Error ? error.message : 'Error importing Trello card',
+        });
+    }
+};
+exports.importFromTrello = importFromTrello;
 const updateTransaction = async (req, res) => {
     const { id } = req.params;
     const updateData = req.body;

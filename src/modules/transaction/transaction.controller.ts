@@ -28,6 +28,24 @@ export const createTransaction = async (req: Request, res: Response) => {
     res.status(201).json(newTransaction);
 };
 
+export const importFromTrello = async (req: Request, res: Response) => {
+    const cardName = String(req.body.cardName || '').trim();
+
+    if (!cardName) {
+        res.status(400).json({ message: 'cardName is required' });
+        return;
+    }
+
+    try {
+        const result = await transactionService.importFromTrelloCard(cardName);
+        res.json(result);
+    } catch (error) {
+        res.status(400).json({
+            message: error instanceof Error ? error.message : 'Error importing Trello card',
+        });
+    }
+};
+
 export const updateTransaction = async (req: Request, res: Response) => {
     const { id } = req.params;
     const updateData = req.body;

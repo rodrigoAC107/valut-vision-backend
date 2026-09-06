@@ -1,5 +1,6 @@
 import { FilterQuery } from 'mongoose';
 import { Transaction, TransactionDocument, TransactionInput } from './transaction.model';
+export { importFromTrelloCard } from './trello-import.service';
 import {
   startOfMonth,
   endOfMonth,
@@ -66,7 +67,7 @@ export const getAllTransactions = async (filters: TransactionFilters = {}) => {
   return transactions.map((tx) => ({
     ...tx.toObject(),
     category: (tx.categoryId as any)?.name ?? null,
-    categoryId: undefined,
+    categoryId: (tx.categoryId as any)?._id ?? tx.categoryId,
   }));
 };
 

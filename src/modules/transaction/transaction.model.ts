@@ -10,6 +10,10 @@ export interface TransactionInput {
     type: TransactionType;
     description?: string;
     expenseType?: ExpenseType;
+    source?: string;
+    sourceKey?: string;
+    sourceCardId?: string;
+    sourceCardName?: string;
 }
 
 export interface TransactionDocument extends TransactionInput, Document {
@@ -26,11 +30,17 @@ const transactionSchema = new Schema<TransactionDocument>(
         type: { type: String, enum: ['income', 'expense'], required: true },
         description: { type: String },
         expenseType: { type: String, enum: ['fixed', 'variable'] },
+        source: { type: String },
+        sourceKey: { type: String },
+        sourceCardId: { type: String },
+        sourceCardName: { type: String },
         isDeleted: { type: Boolean, default: false },
     },
     {
         timestamps: true,
     }
 );
+
+transactionSchema.index({ source: 1, sourceKey: 1 }, { unique: true, sparse: true });
 
 export const Transaction = model<TransactionDocument>('Transaction', transactionSchema);

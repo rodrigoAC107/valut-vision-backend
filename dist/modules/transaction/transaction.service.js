@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTop5TransactionsWithOthers = exports.getMonthlyTransactions = exports.getTransactionSummary = exports.softDeleteTransaction = exports.updateTransaction = exports.createTransaction = exports.getTransactionById = exports.getAllTransactions = void 0;
+exports.getTop5TransactionsWithOthers = exports.getMonthlyTransactions = exports.getTransactionSummary = exports.softDeleteTransaction = exports.updateTransaction = exports.createTransaction = exports.getTransactionById = exports.getAllTransactions = exports.importFromTrelloCard = void 0;
 const transaction_model_1 = require("./transaction.model");
+var trello_import_service_1 = require("./trello-import.service");
+Object.defineProperty(exports, "importFromTrelloCard", { enumerable: true, get: function () { return trello_import_service_1.importFromTrelloCard; } });
 const date_fns_1 = require("date-fns");
 const parseDateOnly = (value, endOfDay = false) => {
     const [year, month, day] = value.split('-').map(Number);
@@ -43,7 +45,7 @@ const getAllTransactions = async (filters = {}) => {
     return transactions.map((tx) => ({
         ...tx.toObject(),
         category: tx.categoryId?.name ?? null,
-        categoryId: undefined,
+        categoryId: tx.categoryId?._id ?? tx.categoryId,
     }));
 };
 exports.getAllTransactions = getAllTransactions;

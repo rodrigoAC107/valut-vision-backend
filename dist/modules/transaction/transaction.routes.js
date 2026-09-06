@@ -38,6 +38,7 @@ const transactionController = __importStar(require("./transaction.controller"));
 const requireAuth_middleware_1 = require("../../middleware/requireAuth.middleware");
 const router = (0, express_1.Router)();
 router.get('/', requireAuth_middleware_1.requireAuth, transactionController.getTransactions);
+router.post('/import/trello', requireAuth_middleware_1.requireAuth, transactionController.importFromTrello);
 router.get('/:id', requireAuth_middleware_1.requireAuth, transactionController.getTransaction);
 router.post('/', requireAuth_middleware_1.requireAuth, transactionController.createTransaction);
 router.put('/:id', requireAuth_middleware_1.requireAuth, transactionController.updateTransaction);
